@@ -1,11 +1,10 @@
 import React from "react";
+import SignIn from "../../components/SignIn";
 import "./styles.scss";
 
 const Login = (props) => {
   return (
-    <div>
-      <h1>Login page</h1>
-    </div>
+    <SignIn />
   );
 };
 
