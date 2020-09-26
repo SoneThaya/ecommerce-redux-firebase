@@ -9,6 +9,7 @@ import HomepageLayout from "./layouts/HomepageLayout";
 // pages
 import Homepage from "./pages/Homepage";
 import Registration from "./pages/Registration";
+import Login from "./pages/Login";
 
 function App() {
   return (
@@ -29,6 +30,15 @@ function App() {
           render={() => (
             <MainLayout>
               <Registration />
+            </MainLayout>
+          )}
+        />
+        <Route
+          exact
+          path="/login"
+          render={() => (
+            <MainLayout>
+              <Login />
             </MainLayout>
           )}
         />
