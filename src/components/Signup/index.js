@@ -21,9 +21,9 @@ class Signup extends Component {
       ...initialState,
     };
 
-    this.handleChange = this.handleChange.bind();
+    this.handleChange = this.handleChange.bind(this);
   }
-  
+
   handleChange(e) {
     const { name, value } = e.target;
 
@@ -69,7 +69,7 @@ class Signup extends Component {
       confirmPassword,
       errors,
     } = this.state;
-    console.log(initialState)
+
     return (
       <div className="signup">
         <div className="wrap">
@@ -82,7 +82,7 @@ class Signup extends Component {
               })}
             </ul>
           )}
-          
+
           <div className="formWrap">
             <form onSubmit={this.handleFormSubmit}>
               <FormInput
