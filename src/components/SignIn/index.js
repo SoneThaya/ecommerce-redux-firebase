@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 
 import "./styles.scss";
 import { signInWithGoogle, auth } from "../../firebase/utils";
@@ -79,6 +80,10 @@ class SignIn extends Component {
               <div className="row">
                 <Button onClick={signInWithGoogle}>Sign in with Google</Button>
               </div>
+            </div>
+
+            <div className="links">
+              <Link to="/recovery">Reset Password</Link>
             </div>
           </form>
         </div>
