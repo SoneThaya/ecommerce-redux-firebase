@@ -1,5 +1,5 @@
 import userTypes from "./user.types";
-import { auth } from "../../firebase/utils";
+import { auth, handleUserProfile } from "../../firebase/utils";
 
 export const setCurrentUser = (user) => ({
   type: userTypes.SET_CURRENT_USER,
@@ -15,5 +15,33 @@ export const signInUser = ({ email, password }) => async (dispatch) => {
     });
   } catch (err) {
     console.log(err);
+  }
+};
+
+export const signUpUser = ({
+  displayName,
+  email,
+  password,
+  confirmPassword,
+}) => async (dispatch) => {
+  if (password !== confirmPassword) {
+    const err = ["Password Don't Match!"];
+    dispatch({
+      type: userTypes.SIGN_UP_ERROR,
+      payload: err,
+    });
+    return;
+  }
+
+  try {
+    const { user } = await auth.createUserWithEmailAndPassword(email, password);
+
+    await handleUserProfile(user, { displayName });
+    dispatch({
+      type: userTypes.SIGN_UP_SUCCESS,
+      payload: true,
+    });
+  } catch (err) {
+    // console.log(err)
   }
 };
