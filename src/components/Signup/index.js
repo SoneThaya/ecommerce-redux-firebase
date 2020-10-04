@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { signUpUser } from "../../redux/User/user.actions";
+import { resetAllAuthForms, signUpUser } from "../../redux/User/user.actions";
 import "./styles.scss";
 
 import AuthWrapper from "../AuthWrapper";
@@ -25,6 +25,7 @@ const Signup = (props) => {
   useEffect(() => {
     if (signUpSuccess) {
       reset();
+      dispatch(resetAllAuthForms());
       props.history.push("/");
     }
   }, [signUpSuccess]);
