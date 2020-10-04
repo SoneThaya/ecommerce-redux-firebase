@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, withRouter, useHistory } from "react-router-dom";
 import {
-  signInUser,
+  emailSignInStart,
   signInWithGoogle,
   resetAllAuthForms,
 } from "../../redux/User/user.actions";
@@ -39,7 +39,7 @@ const SignIn = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(signInUser({ email, password }));
+    dispatch(emailSignInStart({ email, password }));
   };
 
   const handleGoogleSignIn = () => {
