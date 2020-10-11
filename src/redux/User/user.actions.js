@@ -18,6 +18,14 @@ export const checkUserSession = () => ({
   
 })
 
+export const signOutUserStart = () => ({
+  type: userTypes.SIGN_OUT_USER_START
+})
+
+export const signOutUserSuccess = () => ({
+  type: userTypes.SIGN_OUT_USER_SUCCESS
+})
+
 
 
 
