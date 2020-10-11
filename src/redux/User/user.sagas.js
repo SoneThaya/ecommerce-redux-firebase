@@ -6,11 +6,14 @@ import {
   GoogleProvider,
 } from "../../firebase/utils";
 import userTypes from "./user.types";
-import { signInSuccess, signOutUserSuccess } from "./user.actions";
+import { signInSuccess, signOutUserSuccess, userError } from "./user.actions";
 
-export function* getSnapshotFromUserAuth(user) {
+export function* getSnapshotFromUserAuth(user, additionalData = {}) {
   try {
-    const userRef = yield call(handleUserProfile, { userAuth: user });
+    const userRef = yield call(handleUserProfile, {
+      userAuth: user,
+      additionalData,
+    });
     const snapshot = yield userRef.get();
 
     yield put(
@@ -28,12 +31,6 @@ export function* emailSignIn({ payload: { email, password } }) {
   try {
     const { user } = yield auth.signInWithEmailAndPassword(email, password);
     yield getSnapshotFromUserAuth(user);
-
-    // redux code before refactor
-    // dispatch({
-    //   type: userTypes.SIGN_IN_SUCCESS,
-    //   payload: true,
-    // });
   } catch (err) {
     console.log(err);
   }
@@ -60,9 +57,7 @@ export function* onCheckUserSession() {
 export function* signOutUser() {
   try {
     yield auth.signOut();
-    yield put(
-      signOutUserSuccess()
-    )
+    yield put(signOutUserSuccess());
   } catch (error) {
     // console.log(error)
   }
@@ -72,36 +67,26 @@ export function* onSignOutUserStart() {
   yield takeLatest(userTypes.SIGN_OUT_USER_START, signOutUser);
 }
 
-export function* signUpUser({ payload: {
-  displayName,
-  email,
-  password,
-  confirmationPassword
-}}) {
+export function* signUpUser({
+  payload: { displayName, email, password, confirmPassword },
+}) {
   if (password !== confirmPassword) {
     const err = ["Password Don't Match!"];
-    // dispatch({
-    //   type: userTypes.SIGN_UP_ERROR,
-    //   payload: err,
-    // });
+    yield put(userError(err));
     return;
   }
 
   try {
-    const { user } = await auth.createUserWithEmailAndPassword(email, password);
-
-    await handleUserProfile(user, { displayName });
-    dispatch({
-      type: userTypes.SIGN_UP_SUCCESS,
-      payload: true,
-    });
+    const { user } = yield auth.createUserWithEmailAndPassword(email, password);
+    const additionalData = { displayName };
+    yield getSnapshotFromUserAuth(user, additionalData);
   } catch (err) {
     // console.log(err)
   }
 }
 
 export function* onSignUpUserStart() {
-  takeLatest(userTypes.SIGN_UP_USER_START, signUpUser)
+  yield takeLatest(userTypes.SIGN_UP_USER_START, signUpUser);
 }
 
 export default function* userSagas() {
