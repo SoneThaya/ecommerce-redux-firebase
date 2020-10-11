@@ -72,10 +72,43 @@ export function* onSignOutUserStart() {
   yield takeLatest(userTypes.SIGN_OUT_USER_START, signOutUser);
 }
 
+export function* signUpUser({ payload: {
+  displayName,
+  email,
+  password,
+  confirmationPassword
+}}) {
+  if (password !== confirmPassword) {
+    const err = ["Password Don't Match!"];
+    // dispatch({
+    //   type: userTypes.SIGN_UP_ERROR,
+    //   payload: err,
+    // });
+    return;
+  }
+
+  try {
+    const { user } = await auth.createUserWithEmailAndPassword(email, password);
+
+    await handleUserProfile(user, { displayName });
+    dispatch({
+      type: userTypes.SIGN_UP_SUCCESS,
+      payload: true,
+    });
+  } catch (err) {
+    // console.log(err)
+  }
+}
+
+export function* onSignUpUserStart() {
+  takeLatest(userTypes.SIGN_UP_USER_START, signUpUser)
+}
+
 export default function* userSagas() {
   yield all([
     call(onEmailSignInStart),
     call(onCheckUserSession),
     call(onSignOutUserStart),
+    call(onSignUpUserStart),
   ]);
 }
